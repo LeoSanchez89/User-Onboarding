@@ -35,7 +35,7 @@ const UserForm = ({ values, errors, touched, status }) => {
 						name="password"
 						placeholder="Password"
 					/>
-					{touched.password && errors.passoword && (
+					{touched.password && errors.password && (
 						<p>{errors.password}</p>
 					)}
 				</label>
@@ -52,7 +52,7 @@ const UserForm = ({ values, errors, touched, status }) => {
 						<li>Name: {user.name}</li>
 						<li>Email: {user.email}</li>
 						<li>Password: {user.password}</li>
-						<li>TOS: {user.tos}</li>
+                        <li> {user.tos}</li>
 					</ul>
 				);
 			})}
@@ -61,35 +61,36 @@ const UserForm = ({ values, errors, touched, status }) => {
 };
 
 const FormikUserForm = withFormik({
-	
 	mapPropsToValues(props) {
-	
 		return {
 			name: props.name || "",
 			email: props.email || "",
 			password: props.password || "",
-			tos: props.tos || false,
-			
+			tos: props.tos || false
 		};
 	},
 
-	
-	validationSchema: Yup.object().shape({
-		name: Yup.string().required(),
-		
-        email: Yup.string().required(),
+    validationSchema: Yup.object().shape({
         
-        password: Yup.string().required() 
+		name: Yup.string().required("Name is required"),
+
+		email: Yup.string()
+			.email("Invalid Email")
+			.required("Email is required"),
+
+		password: Yup.string()
+			.min(4, "Too Short")
+			.required("Password is required"),
+
+		tos: Yup.boolean().oneOf([true], "Please Agree to Terms of Service").required()
 	}),
 
-	
 	handleSubmit(values, { setStatus, resetForm }) {
-		
 		axios
 			.post("https://reqres.in/api/users/", values)
 			.then(res => {
 				console.log("from axios", res);
-				
+
 				setStatus(res.data);
 
 				resetForm();
