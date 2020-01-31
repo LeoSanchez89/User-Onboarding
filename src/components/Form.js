@@ -17,6 +17,7 @@ const CardGrid = styled.div`
 	justify-content: space-around;
     margin-left: 25%;
     margin-top: 2%;
+    margin-bottom: 2%;
 `;
 
 const StyledForm = styled(Form)`
